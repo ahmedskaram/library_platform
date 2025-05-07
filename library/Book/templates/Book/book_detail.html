@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل الكتاب</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; direction: rtl; }
+        h1 { color: #333; }
+        .book-detail { border: 1px solid #ddd; padding: 20px; border-radius: 5px; background-color: #f9f9f9; }
+        .book-detail p { margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>تفاصيل الكتاب</h1>
+    <div class="book-detail">
+        <p><strong>العنوان:</strong> {{ book.title }}</p>
+        <p><strong>المؤلف:</strong> {{ book.author }}</p>
+        <p><strong>سنة النشر:</strong> {{ book.publication_year }}</p>
+    </div>
+    <a href="{% url 'books_list' %}">العودة إلى قائمة الكتب</a>
+</body>
+</html>

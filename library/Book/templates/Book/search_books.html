@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>البحث عن كتب</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; direction: rtl; }
+        h1 { text-align: center; color: #333; }
+        .search-container { max-width: 500px; margin: 0 auto; }
+        input { width: 100%; padding: 8px; margin-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: right; }
+        th { background-color: #f2f2f2; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        tr:hover { background-color: #f1f1f1; }
+        .no-books { text-align: center; color: #888; font-style: italic; }
+    </style>
+</head>
+<body>
+    <h1>البحث عن كتب</h1>
+    <div class="search-container">
+        <form method="get">
+            <input type="text" name="q" value="{{ query }}" placeholder="  ابحث عن عنوان أو مؤلف...">
+            <button type="submit">بحث</button>
+        </form>
+    </div>
+    {% if books %}
+        <table>
+            <thead>
+                <tr>
+                    <th>العنوان</th>
+                    <th>المؤلف</th>
+                    <th>سنة النشر</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                    <tr>
+                        <td><a href="{% url 'book_detail' book.pk %}">{{ book.title }}</a></td>
+                        <td>{{ book.author }}</td>
+                        <td>{{ book.publication_year }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="no-books">لا توجد كتب تطابق البحث.</p>
+    {% endif %}
+    <p><a href="{% url 'books_list' %}">العودة إلى قائمة الكتب</a></p>
+</body>
+</html>
