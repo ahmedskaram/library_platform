@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الكتاب غير موجود - مكتبة الكلية</title>
+    <title>روابط الكلية - مكتبة الكلية</title>
     <style>
         * {
             margin: 0;
@@ -91,42 +91,86 @@
             margin-left: 270px;
         }
 
-        .not-found {
-            max-width: 600px;
-            margin: 0 auto;
+        .search-container {
+            max-width: 500px;
+            margin: 0 auto 20px;
             background-color: white;
-            padding: 30px;
+            padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
         }
 
-        .not-found h2 {
+        .search-container form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-container input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .search-container button {
+            padding: 10px 20px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .search-container button:hover {
+            background-color: #34495e;
+        }
+
+        h2 {
             color: #2c3e50;
+            text-align: center;
             margin-bottom: 20px;
         }
 
-        .not-found p {
-            color: #555;
-            font-style: italic;
-            font-size: 16px;
-            line-height: 1.6;
-            margin: 20px 0;
+        .links-list {
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        .back-link {
-            text-align: center;
-            margin-top: 20px;
+        .link-item {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .back-link a {
+        .link-item h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .link-item a {
             color: #3498db;
             text-decoration: none;
             font-size: 16px;
         }
 
-        .back-link a:hover {
+        .link-item a:hover {
             text-decoration: underline;
+        }
+
+        .no-links {
+            text-align: center;
+            color: #555;
+            font-style: italic;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            max-width: 800px;
         }
 
         /* Footer */
@@ -175,8 +219,12 @@
                 font-size: 20px;
             }
 
-            .not-found {
-                padding: 20px;
+            .search-container {
+                padding: 15px;
+            }
+
+            .link-item {
+                padding: 10px;
             }
         }
 
@@ -205,22 +253,34 @@
     <!-- Sidebar -->
     <nav class="sidebar">
         <ul>
-            <li><a href="{% url 'books:books_list' %}">قائمة الكتب المتاحة</a></li>
-            <li><a href="{% url 'books:year1' %}">فرقة أولى</a></li>
-            <li><a href="{% url 'books:year2' %}">فرقة ثانية</a></li>
-            <li><a href="{% url 'books:year3' %}">فرقة ثالثة</a></li>
-            <li><a href="{% url 'books:year4' %}">فرقة رابعة</a></li>
+            <li><a href="http://127.0.0.1:8000">الصفحة الرئيسية</a></li>
+            <li><a href="http://127.0.0.1:8000/books/">قائمة الكتب المتاحة</a></li>
+            <li><a href="http://127.0.0.1:8000/books/year1/">فرقة أولى</a></li>
+            <li><a href="http://127.0.0.1:8000/books/year2/">فرقة ثانية</a></li>
+            <li><a href="http://127.0.0.1:8000/books/year3/">فرقة ثالثة</a></li>
+            <li><a href="http://127.0.0.1:8000/books/year4/">فرقة رابعة</a></li>
+            <li><a href="http://127.0.0.1:8000/books/links/">روابط الكلية</a></li>
         </ul>
     </nav>
 
     <!-- Main Content -->
     <main class="main-content">
-        <div class="not-found">
-            <h2>الكتاب غير موجود</h2>
-            <p>{{ message }}</p>
-            <div class="back-link">
-                <a href="/{% url 'books:book_list' %}">العودة إلى قائمة الكتب</a>
-            </div>
+        <div class="search-container">
+            <form method="get" action="http://127.0.0.1:8000/books/search/">
+                <input type="text" name="q" placeholder="ابحث عن عنوان أو مؤلف...">
+                <button type="submit">بحث</button>
+            </form>
+        </div>
+        <h2>روابط الكلية</h2>
+        <div class="links-list">
+            {% for link in links %}
+                <div class="link-item">
+                    <h3>{{ link.title }}</h3>
+                    <a href="{{ link.url }}" target="_blank">{{ link.url }}</a>
+                </div>
+            {% empty %}
+                <p class="no-links">لا توجد روابط متاحة حاليًا.</p>
+            {% endfor %}
         </div>
     </main>
 
@@ -240,7 +300,6 @@
             mainContent.classList.toggle('expanded');
         });
 
-        // إغلاق القائمة عند النقر خارجها
         document.addEventListener('click', (event) => {
             if (!sidebar.contains(event.target) && !menuToggle.contains(event.target) && sidebar.classList.contains('active')) {
                 sidebar.classList.remove('active');

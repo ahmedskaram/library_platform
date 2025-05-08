@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الكتاب غير موجود - مكتبة الكلية</title>
+    <title>مكتبة الكلية - الصفحة الرئيسية</title>
     <style>
         * {
             margin: 0;
@@ -27,6 +27,10 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1001;
         }
 
         header h1 {
@@ -49,12 +53,16 @@
             top: 0;
             left: -250px;
             transition: left 0.3s ease;
-            padding-top: 70px;
             z-index: 1000;
+            overflow-y: auto; /* تمكين التمرير العمودي */
         }
 
         .sidebar.active {
             left: 0;
+        }
+
+        .sidebar-content {
+            padding-top: 70px; /* مساحة لتجنب التداخل مع الهيدر */
         }
 
         .sidebar ul {
@@ -80,10 +88,29 @@
             transition: padding-right 0.2s ease;
         }
 
+        /* تخصيص شريط التمرير */
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: #2c3e50;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #3e5c76;
+            border-radius: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #4a6076;
+        }
+
         /* Main Content */
         .main-content {
             margin-left: 20px;
             padding: 40px;
+            padding-top: 80px; /* مساحة إضافية للهيدر الثابت */
             transition: margin-left 0.3s ease;
         }
 
@@ -91,9 +118,7 @@
             margin-left: 270px;
         }
 
-        .not-found {
-            max-width: 600px;
-            margin: 0 auto;
+        .welcome-section {
             background-color: white;
             padding: 30px;
             border-radius: 8px;
@@ -101,32 +126,15 @@
             text-align: center;
         }
 
-        .not-found h2 {
+        .welcome-section h2 {
             color: #2c3e50;
             margin-bottom: 20px;
         }
 
-        .not-found p {
-            color: #555;
-            font-style: italic;
+        .welcome-section p {
             font-size: 16px;
             line-height: 1.6;
-            margin: 20px 0;
-        }
-
-        .back-link {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .back-link a {
-            color: #3498db;
-            text-decoration: none;
-            font-size: 16px;
-        }
-
-        .back-link a:hover {
-            text-decoration: underline;
+            color: #555;
         }
 
         /* Footer */
@@ -174,10 +182,6 @@
             header h1 {
                 font-size: 20px;
             }
-
-            .not-found {
-                padding: 20px;
-            }
         }
 
         @media (min-width: 769px) {
@@ -198,30 +202,35 @@
 <body>
     <!-- Header -->
     <header>
-        <h1>مكتبة الكلية</h1>
+        <h1>مكتبة آداب جامعة الزقازيق</h1>
         <div class="menu-toggle">☰</div>
     </header>
 
     <!-- Sidebar -->
     <nav class="sidebar">
-        <ul>
-            <li><a href="{% url 'books:books_list' %}">قائمة الكتب المتاحة</a></li>
-            <li><a href="{% url 'books:year1' %}">فرقة أولى</a></li>
-            <li><a href="{% url 'books:year2' %}">فرقة ثانية</a></li>
-            <li><a href="{% url 'books:year3' %}">فرقة ثالثة</a></li>
-            <li><a href="{% url 'books:year4' %}">فرقة رابعة</a></li>
-        </ul>
+        <div class="sidebar-content">
+            <ul>
+                <li><a href="{% url 'Book:home' %}">الصفحة الرئيسية</a></li>
+                <li><a href="{% url 'Book:books_list' %}">قائمة الكتب المتاحة</a></li>
+                <li><a href="{% url 'Book:year1' %}">فرقة أولى</a></li>
+                <li><a href="{% url 'Book:year2' %}">فرقة ثانية</a></li>
+                <li><a href="{% url 'Book:year3' %}">فرقة ثالثة</a></li>
+                <li><a href="{% url 'Book:year4' %}">فرقة رابعة</a></li>
+                <li><a href="{% url 'Book:college_links' %}">روابط الكلية</a></li>
+            </ul>
+        </div>
     </nav>
 
     <!-- Main Content -->
     <main class="main-content">
-        <div class="not-found">
-            <h2>الكتاب غير موجود</h2>
-            <p>{{ message }}</p>
-            <div class="back-link">
-                <a href="/{% url 'books:book_list' %}">العودة إلى قائمة الكتب</a>
-            </div>
-        </div>
+        <section class="welcome-section">
+            <h2>مرحبًا بك في مكتبة الكلية</h2>
+            <p>
+                نقدم لك مجموعة واسعة من الكتب والملخصات الأكاديمية لطلاب كلية الآداب جامعة الزقازيق من الفرقة الأولى إلى الرابعة.
+                تصفح الكتب المتاحة أو اختر الفرقة الدراسية للوصول إلى المواد المناسبة بسهولة.
+                هدفنا هو دعمك في رحلتك الأكاديمية!
+            </p>
+        </section>
     </main>
 
     <!-- Footer -->
@@ -240,7 +249,6 @@
             mainContent.classList.toggle('expanded');
         });
 
-        // إغلاق القائمة عند النقر خارجها
         document.addEventListener('click', (event) => {
             if (!sidebar.contains(event.target) && !menuToggle.contains(event.target) && sidebar.classList.contains('active')) {
                 sidebar.classList.remove('active');
