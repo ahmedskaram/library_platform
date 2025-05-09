@@ -27,6 +27,10 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1001;
         }
 
         header h1 {
@@ -49,12 +53,16 @@
             top: 0;
             left: -250px;
             transition: left 0.3s ease;
-            padding-top: 70px;
             z-index: 1000;
+            overflow-y: auto; /* تمكين التمرير العمودي */
         }
 
         .sidebar.active {
             left: 0;
+        }
+
+        .sidebar-content {
+            padding-top: 70px; /* مساحة لتجنب التداخل مع الهيدر */
         }
 
         .sidebar ul {
@@ -80,10 +88,28 @@
             transition: padding-right 0.2s ease;
         }
 
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: #2c3e50;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #3e5c76;
+            border-radius: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #4a6076;
+        }
+
         /* Main Content */
         .main-content {
             margin-left: 20px;
             padding: 40px;
+            padding-top: 80px; /* مساحة إضافية للهيدر الثابت */
             transition: margin-left 0.3s ease;
         }
 
@@ -246,28 +272,30 @@
 <body>
     <!-- Header -->
     <header>
-        <h1>مكتبة الكلية</h1>
+        <h1> مكتبة آداب جامعة الزقازيق</h1>
         <div class="menu-toggle">☰</div>
     </header>
 
     <!-- Sidebar -->
     <nav class="sidebar">
-        <ul>
-            <li><a href="http://127.0.0.1:8000">الصفحة الرئيسية</a></li>
-            <li><a href="http://127.0.0.1:8000/books/">قائمة الكتب المتاحة</a></li>
-            <li><a href="http://127.0.0.1:8000/books/year1/">فرقة أولى</a></li>
-            <li><a href="http://127.0.0.1:8000/books/year2/">فرقة ثانية</a></li>
-            <li><a href="http://127.0.0.1:8000/books/year3/">فرقة ثالثة</a></li>
-            <li><a href="http://127.0.0.1:8000/books/year4/">فرقة رابعة</a></li>
-            <li><a href="http://127.0.0.1:8000/books/links/">روابط الكلية</a></li>
-        </ul>
+        <div class="sidebar-content">
+            <ul>
+                <li><a href="{% url 'Book:home' %}">الصفحة الرئيسية</a></li>
+                <li><a href="{% url 'Book:books_list' %}">قائمة الكتب المتاحة</a></li>
+                <li><a href="{% url 'Book:year1' %}">فرقة أولى</a></li>
+                <li><a href="{% url 'Book:year2' %}">فرقة ثانية</a></li>
+                <li><a href="{% url 'Book:year3' %}">فرقة ثالثة</a></li>
+                <li><a href="{% url 'Book:year4' %}">فرقة رابعة</a></li>
+                <li><a href="{% url 'Book:college_links' %}">روابط الكلية</a></li>
+            </ul>
+        </div>
     </nav>
 
     <!-- Main Content -->
     <main class="main-content">
         <div class="search-container">
-            <form method="get" action="http://127.0.0.1:8000/books/search/">
-                <input type="text" name="q" placeholder="ابحث عن عنوان أو مؤلف...">
+            <form method="get" action="{% url 'Book:search_books' %}">
+                <input type="text" name="q" placeholder="ابحث عن روابط ...">
                 <button type="submit">بحث</button>
             </form>
         </div>

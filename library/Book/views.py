@@ -75,6 +75,25 @@ def book_detail(request, pk):
 
 #####################################################################################################
 
+from .models import Book
+from django.shortcuts import redirect, render
+from django.core.exceptions import ObjectDoesNotExist
+
+def delete_book(request, pk):
+    try:
+        book = Book.objects.get(pk=pk)
+        if request.method == 'POST':
+            book.delete()
+            return redirect('books_list')
+
+    
+    except ObjectDoesNotExist:
+        context = {'message': 'الكتاب غير موجود.'}
+        return render(request, 'Book/book_not_found.html', context)
+
+#####################################################################################################
+
+
 def college_links(request):
     links = [
         {'title': 'رابط موقع الجامعة :', 'url': ' http://www1.zu.edu.eg/ServiceDetails.aspx?ID=25'},
@@ -85,7 +104,7 @@ def college_links(request):
         {'title': 'رابط التربية العسكرية : ', 'url': 'http://www.militaryeducation.zu.edu.eg/Views/ED_Students/StudentMilitary'},
         {'title': 'رابط سداد مصروفات الجامعة  : ', 'url': 'http://www.militaryeducation.zu.edu.eg/Views/ED_Students/StudExpenses'},
         {'title': ' رابط المقررات الدراسية :', 'url': 'http://artstudent.eps.zu.edu.eg/Views/StudentViews/ESubjectsAll'},
-        {'title': 'صفحة كلية الآداب علي فيسبوك', 'url': 'https://www.facebook.com/share/16CXmiMcv4/'},
+        {'title': 'صفحة كلية الآداب الرسمية علي فيسبوك :', 'url': 'https://www.facebook.com/share/16CXmiMcv4/'},
     ]
     context = {'links': links}
     return render(request, 'Book/college_links.html', context)
@@ -99,8 +118,8 @@ from django.utils.html import escape
 
 def search_books(request):
 
-    storage = messages.get_messages(request)
-    storage.used = True
+    # storage = messages.get_messages(request)
+    # storage.used = True
     query = escape(request.GET.get('q', '').strip())
     books = []
     if query:

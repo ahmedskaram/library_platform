@@ -339,9 +339,11 @@
         {% else %}
             <p class="no-books">لا توجد كتب تطابق البحث.</p>
         {% endif %}
-        <p class="back-link"><a href="{% url 'Book:books_list' %}">العودة إلى قائمة الكتب</a></p>
+                    <div class="back-link">
+                <a href="javascript:history.back()">العودة إلى الصفحة السابقة</a>
+            </div>
+        </div>
     </main>
-
     <footer>
         <p>© 2025 <a href="https://www.facebook.com/share/1BhQoTLxFP/" target="_blank">Ahmed Karam</a>. جميع الحقوق محفوظة.</p>
     </footer>

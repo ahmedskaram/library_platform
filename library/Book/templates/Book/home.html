@@ -79,13 +79,23 @@
             color: white;
             text-decoration: none;
             font-size: 16px;
-            display: block;
+            display: flex;
+            align-items: center;
         }
 
         .sidebar ul li a:hover {
             background-color: #3e5c76;
             padding-right: 10px;
             transition: padding-right 0.2s ease;
+        }
+
+        .icon {
+            margin-left: 10px;
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* تخصيص شريط التمرير */
@@ -210,7 +220,7 @@
     <nav class="sidebar">
         <div class="sidebar-content">
             <ul>
-                <li><a href="{% url 'Book:home' %}">الصفحة الرئيسية</a></li>
+                <li><a href="{% url 'Book:home' %}"><span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.5L2 9.8V20c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9.8L12 2.5zM12 4.3l7.2 5.4v10.3H4.8V9.7L12 4.3zm-2 12.2v-4h4v4h-4z"/></svg></span>الصفحة الرئيسية</a></li>
                 <li><a href="{% url 'Book:books_list' %}">قائمة الكتب المتاحة</a></li>
                 <li><a href="{% url 'Book:year1' %}">فرقة أولى</a></li>
                 <li><a href="{% url 'Book:year2' %}">فرقة ثانية</a></li>
