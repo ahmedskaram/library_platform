@@ -132,5 +132,14 @@ def search_books(request):
         messages.info(request, 'يرجى إدخال استعلام بحث.')
     context = {'books': books, 'query': query}
     return render(request, 'Book/search_books.html', context)
-
+    
+# def search_books(request):
+#     query = escape(request.GET.get('q', '').strip())
+#     books = Book.objects.filter(
+#         Q(title__icontains=query) | Q(author__icontains=query)
+#         ) if query else Book.objects.all() # list all books
+    
+#     context = {'books': books, 'query': query}
+#     return render(request, 'Book/search_books.html', context)
+    
 #####################################################################################################
