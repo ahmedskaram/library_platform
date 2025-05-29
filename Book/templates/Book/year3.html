@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قائمة الكتب - مكتبة الكلية</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            direction: rtl;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1001;
+        }
+
+        header h1 {
+            font-size: 24px;
+        }
+
+        .menu-toggle {
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #34495e;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: -250px;
+            transition: left 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-content {
+            padding-top: 70px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            padding: 15px 20px;
+            border-bottom: 1px solid #4a6076;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            display: block;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: #3e5c76;
+            padding-right: 10px;
+            transition: padding-right 0.2s ease;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: #2c3e50;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #3e5c76;
+            border-radius: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #4a6076;
+        }
+
+        .main-content {
+            margin-left: 20px;
+            padding: 40px;
+            padding-top: 80px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.expanded {
+            margin-left: 270px;
+        }
+
+        .search-container {
+            max-width: 500px;
+            margin: 0 auto 20px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-container form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-container input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            width: 100%; /* ضمان ملء العرض */
+        }
+
+        .search-container button {
+            padding: 10px 20px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .search-container button:hover {
+            background-color: #34495e;
+        }
+
+        .messages {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: #e0f7fa;
+            border: 1px solid #00acc1;
+            border-radius: 4px;
+            color: #006064;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            border: 1px solid #ddd;
+            text-align: right;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+        }
+
+        td a {
+            color: #3498db;
+            text-decoration: none;
+            word-wrap: break-word; /* تفاف النص الطويل */
+            overflow-wrap: break-word;
+        }
+
+        td a:hover {
+            text-decoration: underline;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .no-books {
+            text-align: center;
+            color: #555;
+            font-style: italic;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            max-width: 800px;
+        }
+
+        .add-book {
+            display: block;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .add-book a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .add-book a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        footer a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .sidebar {
+                left: -250px;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 20px;
+            }
+
+            .main-content.expanded {
+                margin-left: 20px;
+            }
+
+            header h1 {
+                font-size: 20px;
+            }
+
+            .search-container {
+                padding: 10px; /* تقليل الحواف */
+                max-width: 100%; /* ملء العرض */
+                margin: 10px; /* تقليل الهامش */
+            }
+
+            .search-container form {
+                flex-direction: column; /* جعل الحقل والزر عموديًا */
+                gap: 8px;
+            }
+
+            .search-container input[type="text"] {
+                font-size: 14px; /* تقليل حجم الخط */
+                padding: 8px; /* تقليل الحواف */
+            }
+
+            .search-container input[type="text"]::placeholder {
+                font-size: 14px; /* تقليل حجم نص placeholder */
+                color: #888;
+            }
+
+            .search-container button {
+                width: 100%; /* ملء العرض */
+                padding: 8px; /* تقليل الحواف */
+                font-size: 14px; /* تقليل حجم الخط */
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .menu-toggle {
+                display: none;
+            }
+
+            .sidebar {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 270px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>مكتبة الكلية</h1>
+        <div class="menu-toggle">☰</div>
+    </header>
+
+    <nav class="sidebar">
+        <div class="sidebar-content">
+            <ul>
+                <li><a href="{% url 'Book:home' %}">الصفحة الرئيسية</a></li>
+                <li><a href="{% url 'Book:books_list' %}">قائمة الكتب المتاحة</a></li>
+                <li><a href="{% url 'Book:year1' %}">فرقة أولى</a></li>
+                <li><a href="{% url 'Book:year2' %}">فرقة ثانية</a></li>
+                <li><a href="{% url 'Book:year3' %}">فرقة ثالثة</a></li>
+                <li><a href="{% url 'Book:year4' %}">فرقة رابعة</a></li>
+                <li><a href="{% url 'Book:college_links' %}">روابط الكلية</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <h1>  الفرقة الثالثة</h1>
+        <div class="search-container">
+            <form method="get" action="{% url 'Book:search_books' %}">
+                <input type="text" name="q" placeholder="ابحث عن عنوان أو مؤلف">
+                <button type="submit">بحث</button>
+            </form>
+        </div>
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if books %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>العنوان</th>
+                        <th>المؤلف</th>
+                        <th>سنة النشر</th>
+                        <th>الفرقة</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in books %}
+                        <tr>
+                            <td><a href="{% url 'Book:book_detail' book.pk %}">{{ book.title }}</a></td>
+                            <td>{{ book.author }}</td>
+                            <td>{{ book.publication_date|date:"Y" }}</td>
+                            <td>{{ book.batch }}</td>
+                            <td>
+                                {% if book.pdf_file %}
+                                    <a href="{{ book.pdf_file.url }}" target="_blank">قراءة أونلاين</a>
+                                {% else %}
+                                    <span>غير متاح</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="no-books">لا توجد كتب متاحة حاليًا.</p>
+        {% endif %}
+    </main>
+
+    <footer>
+        <p>© 2025 <a href="https://www.facebook.com/share/1BhQoTLxFP/" target="_blank">Ahmed Karam</a>. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script>
+        const menuToggle = document.querySelector('.menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            mainContent.classList.toggle('expanded');
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!sidebar.contains(event.target) && !menuToggle.contains(event.target) && sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                mainContent.classList.remove('expanded');
+            }
+        });
+    </script>
+</body>
+</html>

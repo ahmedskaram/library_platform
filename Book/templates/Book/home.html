@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مكتبة آداب جامعة الزقازيق - الصفحة الرئيسية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            direction: rtl;
+            background-color: #f4f4f9;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(90deg, #2c3e50, #34495e);
+            color: white;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1001;
+        }
+
+        header h1 {
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+        }
+
+        header h1 img {
+            width: 35px;
+            height: 35px;
+            margin-left: 8px;
+        }
+
+        .menu-toggle {
+            font-size: 28px;
+            cursor: pointer;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-toggle.active {
+            transform: rotate(90deg);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            background-color: #34495e;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: -240px;
+            transition: left 0.3s ease, opacity 0.3s ease;
+            z-index: 1000;
+            opacity: 0;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch; /* تحسين التمرير على iOS */
+        }
+
+        .sidebar.active {
+            left: 0;
+            opacity: 1;
+        }
+
+        .sidebar-content {
+            padding-top: 60px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            padding: 12px 15px;
+            border-bottom: 1px solid #4a6076;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            transition: padding-right 0.3s ease, color 0.3s ease;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: #3e5c76;
+            padding-right: 12px;
+            color: #3498db;
+        }
+
+        .sidebar ul li a i {
+            margin-left: 8px;
+            font-size: 16px;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: #2c3e50;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #3e5c76;
+            border-radius: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #4a6076;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 15px;
+            padding: 30px;
+            padding-top: 70px;
+            padding-bottom: 60px; /* لتجنب تداخل المحتوى مع الـ Footer */
+            min-height: 100vh; /* ضمان تغطية الشاشة */
+            transition: margin-left 0.3s ease;
+            touch-action: pan-y; /* تحسين التمرير باللمس */
+        }
+
+        .main-content.expanded {
+            margin-left: 255px;
+        }
+
+        .welcome-section {
+            background: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') no-repeat center center;
+            background-size: cover;
+            padding: 35px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            margin: 0 auto;
+            max-width: 850px;
+            position: relative;
+            overflow: hidden;
+            color: white;
+        }
+
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(44, 62, 80, 0.7);
+            z-index: 1;
+        }
+
+        .welcome-section > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .welcome-section h2 {
+            font-size: 26px;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .welcome-section p {
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .welcome-section .cta-button {
+            display: inline-block;
+            padding: 10px 25px;
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: bold;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .welcome-section .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Quick Links Section */
+        .quick-links {
+            max-width: 850px;
+            margin: 30px auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .quick-link-card {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .quick-link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .quick-link-card h3 {
+            color: #2c3e50;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .quick-link-card a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .quick-link-card a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(90deg, #2c3e50, #34495e);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            z-index: 999; /* أقل من Sidebar */
+        }
+
+        footer a {
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #2980b9;
+        }
+
+        footer .social-links a {
+            margin: 0 8px;
+            font-size: 18px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .sidebar {
+                width: 220px;
+                left: -220px;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 10px;
+                padding: 15px;
+                padding-top: 60px;
+                padding-bottom: 80px; /* لتغطية الـ Footer على الهواتف */
+            }
+
+            .main-content.expanded {
+                margin-left: 10px;
+            }
+
+            header {
+                padding: 10px 12px;
+            }
+
+            header h1 {
+                font-size: 16px;
+            }
+
+            header h1 img {
+                width: 28px;
+                height: 28px;
+            }
+
+            .menu-toggle {
+                font-size: 24px;
+            }
+
+            .welcome-section {
+                padding: 20px;
+                max-width: 100%;
+                margin: 10px auto;
+                background-attachment: scroll; /* إزالة fixed على الهواتف */
+            }
+
+            .welcome-section h2 {
+                font-size: 20px;
+            }
+
+            .welcome-section p {
+                font-size: 13px;
+            }
+
+            .welcome-section .cta-button {
+                padding: 8px 20px;
+                font-size: 13px;
+            }
+
+            .quick-links {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                margin: 20px auto;
+            }
+
+            .quick-link-card {
+                padding: 12px;
+            }
+
+            .quick-link-card h3 {
+                font-size: 15px;
+            }
+
+            .quick-link-card a {
+                font-size: 13px;
+            }
+
+            footer {
+                padding: 12px;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            footer .social-links a {
+                margin: 0 6px;
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 200px;
+                left: -200px;
+            }
+
+            .sidebar-content {
+                padding-top: 50px;
+            }
+
+            .sidebar ul li {
+                padding: 10px 12px;
+            }
+
+            .sidebar ul li a {
+                font-size: 14px;
+            }
+
+            .sidebar ul li a i {
+                font-size: 14px;
+            }
+
+            .main-content {
+                padding: 12px;
+                padding-top: 50px;
+                padding-bottom: 80px; /* لتغطية الـ Footer */
+            }
+
+            .welcome-section {
+                padding: 15px;
+            }
+
+            .welcome-section h2 {
+                font-size: 18px;
+            }
+
+            .welcome-section p {
+                font-size: 12px;
+            }
+
+            .welcome-section .cta-button {
+                padding: 7px 15px;
+                font-size: 12px;
+            }
+
+            footer {
+                padding: 10px;
+            }
+
+            footer p {
+                font-size: 14px;
+            }
+
+            footer .social-links a {
+                font-size: 14px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .menu-toggle {
+                display: none;
+            }
+
+            .sidebar {
+                left: 0;
+                opacity: 1;
+                width: 240px;
+            }
+
+            .main-content {
+                margin-left: 255px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #3498db;
+            border-top: 4px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Animation -->
+    <div class="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <h1>
+            مكتبة آداب جامعة الزقازيق
+        </h1>
+        <div class="menu-toggle">☰</div>
+    </header>
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-content">
+            <ul>
+                <li><a href="{% url 'Book:home' %}"><i class="fas fa-home"></i> الصفحة الرئيسية</a></li>
+                <li><a href="{% url 'Book:books_list' %}"><i class="fas fa-book"></i> قائمة الكتب المتاحة</a></li>
+                <li><a href="{% url 'Book:year1' %}"><i class="fas fa-graduation-cap"></i> فرقة أولى</a></li>
+                <li><a href="{% url 'Book:year2' %}"><i class="fas fa-graduation-cap"></i> فرقة ثانية</a></li>
+                <li><a href="{% url 'Book:year3' %}"><i class="fas fa-graduation-cap"></i> فرقة ثالثة</a></li>
+                <li><a href="{% url 'Book:year4' %}"><i class="fas fa-graduation-cap"></i> فرقة رابعة</a></li>
+                <li><a href="{% url 'Book:college_links' %}"><i class="fas fa-link"></i> روابط الكلية</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <section class="welcome-section">
+            <h2>مرحبًا بك في مكتبة الكلية</h2>
+            <p>
+                اكتشف مجموعة واسعة من الكتب والملخصات الأكاديمية المصممة خصيصًا لطلاب كلية الآداب جامعة الزقازيق - قسم التاريخ. 
+                من الفرقة الأولى إلى الرابعة، نسعى لدعم رحلتك الأكاديمية بموارد تعليمية شاملة وسهلة الوصول.
+            </p>
+            <a href="{% url 'Book:books_list' %}" class="cta-button">استكشف الآن</a>
+        </section>
+
+        <section class="quick-links">
+            <div class="quick-link-card">
+                <h3>فرقة أولى</h3>
+                <a href="{% url 'Book:year1' %}">عرض الكتب</a>
+            </div>
+            <div class="quick-link-card">
+                <h3>فرقة ثانية</h3>
+                <a href="{% url 'Book:year2' %}">عرض الكتب</a>
+            </div>
+            <div class="quick-link-card">
+                <h3>فرقة ثالثة</h3>
+                <a href="{% url 'Book:year3' %}">عرض الكتب</a>
+            </div>
+            <div class="quick-link-card">
+                <h3>فرقة رابعة</h3>
+                <a href="{% url 'Book:year4' %}">عرض الكتب</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 <a href="https://www.facebook.com/share/1BhQoTLxFP/" target="_blank">Ahmed Karam</a>. جميع الحقوق محفوظة.</p>
+        <div class="social-links">
+            <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Sidebar Toggle
+        const menuToggle = document.querySelector('.menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            mainContent.classList.toggle('expanded');
+            menuToggle.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!sidebar.contains(event.target) && !menuToggle.contains(event.target) && sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                mainContent.classList.remove('expanded');
+                menuToggle.classList.remove('active');
+            }
+        });
+
+        // Loading Animation
+        window.addEventListener('load', () => {
+            const loading = document.querySelector('.loading');
+            setTimeout(() => {
+                loading.classList.add('hidden');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
